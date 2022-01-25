@@ -52,7 +52,7 @@ function Titulo(props) {
 }
 
 export default function PaginaInicial() {
-  const username = 'peas'
+  const username = 'cemf'
 
   return (
     <>
@@ -62,12 +62,13 @@ export default function PaginaInicial() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: appConfig.theme.colors.primary[500],
+          // backgroundColor: appConfig.theme.colors.primary[500],
           backgroundImage:
-            'url(https://virtualbackgrounds.site/wp-content/uploads/2020/08/the-matrix-digital-rain.jpg)',
+            'url(https://virtualbackgrounds.site/wp-content/uploads/2021/02/distracted-girlfriend-meme-1536x864.jpg)',
           backgroundRepeat: 'no-repeat',
           backgroundSize: 'cover',
           backgroundBlendMode: 'multiply',
+          
         }}
       >
         <Box
@@ -83,7 +84,7 @@ export default function PaginaInicial() {
             maxWidth: '700px',
             borderRadius: '5px',
             padding: '32px',
-            margin: '16px',
+            margin: '12% 20% 0 0',
             boxShadow: '0 2px 10px 0 rgb(0 0 0 / 20%)',
             backgroundColor: appConfig.theme.colors.neutrals[700],
           }}
@@ -144,7 +145,7 @@ export default function PaginaInicial() {
               flexDirection: 'column',
               alignItems: 'center',
               maxWidth: '200px',
-              padding: '16px',
+              padding: '10px',
               backgroundColor: appConfig.theme.colors.neutrals[800],
               border: '1px solid',
               borderColor: appConfig.theme.colors.neutrals[999],
@@ -156,7 +157,10 @@ export default function PaginaInicial() {
             <Image
               styleSheet={{
                 borderRadius: '50%',
-                marginBottom: '16px',
+                marginBottom: '10px',
+                marginTop:  '6px',
+                
+               
               }}
               src={`https://github.com/${username}.png`}
             />
@@ -165,7 +169,7 @@ export default function PaginaInicial() {
               styleSheet={{
                 color: appConfig.theme.colors.neutrals[200],
                 backgroundColor: appConfig.theme.colors.neutrals[900],
-                padding: '3px 10px',
+                padding: '5px 10px',
                 borderRadius: '1000px',
               }}
             >
