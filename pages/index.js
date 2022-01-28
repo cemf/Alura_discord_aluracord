@@ -60,7 +60,7 @@ export default function PaginaInicial() {
           justifyContent: 'center',
           // backgroundColor: appConfig.theme.colors.primary[500],
           backgroundImage:
-            'url(https://virtualbackgrounds.site/wp-content/uploads/2021/02/distracted-girlfriend-meme-1536x864.jpg)',
+            'url(https://external-preview.redd.it/_YA2AgljB4nmG8w03RbpUv4G4_ShUj4ah0Xxsy1Q75c.jpg?width=640&crop=smart&auto=webp&s=cc8644acb46a33a2519820be4749b18113e95758)',
           backgroundRepeat: 'no-repeat',
           backgroundSize: 'cover',
           backgroundBlendMode: 'multiply',
@@ -80,7 +80,6 @@ export default function PaginaInicial() {
             maxWidth: '700px',
             borderRadius: '5px',
             padding: '32px',
-            margin: '12% 20% 0 0',
             boxShadow: '0 2px 10px 0 rgb(0 0 0 / 20%)',
             backgroundColor: appConfig.theme.colors.neutrals[700],
           }}
