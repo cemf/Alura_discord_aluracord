@@ -1,45 +1,24 @@
 import { Box, Button, Text, TextField, Image } from '@skynexui/components'
 import appConfig from '../config.json'
+import React from 'react'
+import {useRouter} from 'next/router'
 
-function GlobalStyle() {
-  return (
-    <style global jsx>
-      {`
-        * {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-          list-style: none;
-        }
-        body {
-          font-family: 'Open Sans', sans-serif;
-        }
-        /* App fit Height */
-        html,
-        body,
-        #__next {
-          min-height: 100vh;
-          display: flex;
-          flex: 1;
-        }
-        #__next {
-          flex: 1;
-        }
-        #__next > * {
-          flex: 1;
-        }
-        /* ./App fit Height */
-      `}
-    </style>
-  )
+async function getUser(username) {
+  return fetch(`https://api.github.com/users/${username}`)
+  .then(response => response.json())
+  .then(response => {
+      return response;
+  })
 }
 
 function Titulo(props) {
+  // let data = await getUser('cemf')
+  // console.log(data)
   const children = props.children
   const Tag = props.tag || 'h1';
   return (
     <>
-      <Tag>{props.children}</Tag>
+      <Tag>{children}</Tag>
       <style jsx>{`
         ${Tag} {
           color: ${appConfig.theme.colors.neutrals['500']};
@@ -52,11 +31,28 @@ function Titulo(props) {
 }
 
 export default function PaginaInicial() {
-  const username = 'cemf'
+  // const username = 'cemf'
+  const [username, setUsername] = React.useState('cemf')
+  const roteamento = useRouter();
 
   return (
     <>
-      <GlobalStyle />
+    {/* ABAIXO */}
+      {/* <Button
+       styleSheet={{
+        width: '100px',
+        height:'10px'
+      }}
+      onClick={async(ev)=>{
+        ev.preventDefault()
+        return await fetch(`https://api.github.com/users/cemf`)
+        .then(response => response.json())
+        .then(response => {
+          console.log(response)
+          ev.target.innerHTML = response.login;
+        // return response.login
+      })
+      }}></Button> */}
       <Box
         styleSheet={{
           display: 'flex',
@@ -92,6 +88,11 @@ export default function PaginaInicial() {
           {/* Formulário */}
           <Box
             as="form"
+            onSubmit={(ev)=>{
+              ev.preventDefault();
+              roteamento.push('/chat')
+              
+            }}
             styleSheet={{
               display: 'flex',
               flexDirection: 'column',
@@ -112,8 +113,12 @@ export default function PaginaInicial() {
             >
               {appConfig.name}
             </Text>
-
             <TextField
+               value={username}
+               onChange={function Handler(ev){
+                 let nome = ev.target.value;
+                  setUsername(nome)                  
+                  }}
               fullWidth
               textFieldColors={{
                 neutral: {
@@ -123,6 +128,7 @@ export default function PaginaInicial() {
                   backgroundColor: appConfig.theme.colors.neutrals[800],
                 },
               }}
+              
             />
             <Button
               type="submit"
@@ -162,7 +168,7 @@ export default function PaginaInicial() {
                 
                
               }}
-              src={`https://github.com/${username}.png`}
+              src={`https://github.com/${username.length >=2 ? username : ''}.png`}
             />
             <Text
               variant="body4"
@@ -173,7 +179,7 @@ export default function PaginaInicial() {
                 borderRadius: '1000px',
               }}
             >
-              {username}
+              {username.length >=2 ? username: ''}
             </Text>
           </Box>
           {/* Photo Area */}
