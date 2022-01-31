@@ -1,11 +1,55 @@
 import { Box, Text, TextField, Image, Button } from '@skynexui/components'
 import React from 'react'
 import appConfig from '../config.json'
+import { useRouter } from 'next/router'
+import { createClient } from '@supabase/supabase-js'
+import { ButtonSendSticker } from '../src/components/ButtonSendSticker'
+
+const SUPABASE_ANONKEY =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MzM5NDc2NCwiZXhwIjoxOTU4OTcwNzY0fQ.xXmdGFfdKMM0Bs2BQLsD9dQhh56d-722qMWqsMknpUE'
+const SUPABASE_URL = 'https://ejzakiobpprkcmkyswfs.supabase.co'
+
+const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANONKEY)
+
+function escutaMensagensEmTempoReal(adicionaMensagem) {
+  return supabaseClient
+    .from('mensagens')
+    .on('INSERT', (respostaLive) => {
+      adicionaMensagem(respostaLive.new)
+    })
+    .subscribe()
+}
 
 export default function ChatPage() {
-//   return <div>Página do Chat</div>
+  const roteamento = useRouter()
+  const usuarioLogado = roteamento.query.username
   const [mensagem, setMensagem] = React.useState('')
-  const [listaDeMensagens, setListaDeMensagens] = React.useState([])
+  const [listaDeMensagens, setListaDeMensagens] = React.useState([
+    //   {id: 1,
+    //   de:'cemf',
+    //   texto:':sticker: https://c.tenor.com/TKpmh4WFEsAAAAAC/alura-gaveta-filmes.gif'
+    // }
+  ])
+  React.useEffect(() => {
+    supabaseClient
+      .from('mensagens')
+      .select('*')
+      .order('id', { ascending: false })
+      .then(({ data }) => {
+        console.log('dados: ', data)
+        setListaDeMensagens(data)
+      })
+
+    escutaMensagensEmTempoReal((novaMensagem) => {
+       // Quero reusar um valor de referencia (objeto/array) 
+      // Passar uma função pro setState
+      setListaDeMensagens((valorAtualDaLista) => {
+        return [
+          novaMensagem,
+           ...valorAtualDaLista]
+      })
+    })
+  }, [])
 
   /*
     // Usuário
@@ -20,13 +64,22 @@ export default function ChatPage() {
     */
   function handleNovaMensagem(novaMensagem) {
     const mensagem = {
-      id: listaDeMensagens.length + 1,
-      de: 'cemf',
+      // id: listaDeMensagens.length + 1,
+      de: usuarioLogado,
       texto: novaMensagem,
     }
 
-    setListaDeMensagens([mensagem, ...listaDeMensagens])
+    supabaseClient
+      .from('mensagens')
+      .insert([mensagem])
+      .then(({ data }) => {
+        // console.log('resposta', data)
+        // setListaDeMensagens([
+        //   data[0],
+        //   ...listaDeMensagens])
+      })
     setMensagem('')
+    //
   }
 
   return (
@@ -70,8 +123,7 @@ export default function ChatPage() {
             padding: '16px',
           }}
         >
-          <MessageList
-           mensagens={listaDeMensagens} />
+          <MessageList mensagens={listaDeMensagens} />
 
           {/* {listaDeMensagens.map((mensagemAtual) => {
                         return (
@@ -94,7 +146,7 @@ export default function ChatPage() {
                 setMensagem(valor)
               }}
               onKeyPress={(event) => {
-                if (event.key === 'Enter' && event.target.value.trim() !== '' ) {
+                if (event.key === 'Enter' && event.target.value.trim() !== '') {
                   event.preventDefault()
                   handleNovaMensagem(mensagem)
                 }
@@ -102,31 +154,37 @@ export default function ChatPage() {
               placeholder="Insira sua mensagem aqui..."
               type="textarea"
               styleSheet={{
-                
                 width: '100%',
                 border: '0',
                 resize: 'none',
                 borderRadius: '5px',
                 padding: '6px 8px',
                 backgroundColor: appConfig.theme.colors.neutrals[800],
-                marginRight: '12px',
+                marginRight: '8px',
                 color: appConfig.theme.colors.neutrals[200],
               }}
             />
+            <ButtonSendSticker
+              onStickerClick={(sticker) => {
+                console.log('doidera', sticker)
+                handleNovaMensagem(':sticker: ' + sticker)
+              }}
+            />
             <Button
-              onClick={()=>{
+              onClick={() => {
                 handleNovaMensagem(mensagem)
               }}
-              label='enviar'
+              label="enviar"
               styleSheet={{
                 height: '80%',
                 paddingBottom: '14px',
                 paddingRight: '30px',
                 paddingLeft: '30px',
-                marginBottom  : '7px',
+                marginBottom: '7px',
                 border: '0',
                 borderRadius: '5px',
                 color: appConfig.theme.colors.neutrals[200],
+                marginLeft: '8px',
               }}
             />
           </Box>
@@ -161,7 +219,6 @@ function Header() {
 }
 
 function MessageList(props) {
-
   return (
     <Box
       tag="ul"
@@ -175,7 +232,6 @@ function MessageList(props) {
       }}
     >
       {props.mensagens.map((mensagem) => {
-        console.log(props)
         return (
           <Text
             key={mensagem.id}
@@ -203,7 +259,7 @@ function MessageList(props) {
                   display: 'inline-block',
                   marginRight: '8px',
                 }}
-                src={`https://github.com/cemf.png`}
+                src={`https://github.com/${mensagem.de}.png`}
               />
               <Text tag="strong">{mensagem.de}</Text>
               <Text
@@ -218,25 +274,29 @@ function MessageList(props) {
               </Text>
               <Button
                 styleSheet={{
-                  float:'right'
+                  float: 'right',
                 }}
-                onClick={()=>{
+                onClick={() => {
                   // let resposta = confirm('Deseja remover essa mensagem?')
                   //                       if(resposta === true){
                   //                           let indice = listaDeMensagens.indexOf(mensagem);
-                  //                           //1 parametro: Indice que vou manipular 
-                  //                           //2 parametro: Quantidade de itens que seram manipulados a partir do primeiro paramentro 
+                  //                           //1 parametro: Indice que vou manipular
+                  //                           //2 parametro: Quantidade de itens que seram manipulados a partir do primeiro paramentro
                   //                           //3 parametro: Setar oq vc vai colocar no lugar (não obrigatório)
                   //                           listaDeMensagens.splice(indice,1)
                   //                           //... juntar um objeto/array com o outro
                   //                           setListaMensagens([...listaDeMensagens])
                   //                       }
-
-                }
-                }
+                }}
               />
             </Box>
-            {mensagem.texto}
+            {/* Declarativo */}
+            {mensagem.texto.startsWith(':sticker:') ? (
+              <Image src={mensagem.texto.replace(':sticker:', '')} />
+            ) : (
+              mensagem.texto
+            )}
+            {/* {mensagem.texto} */}
           </Text>
         )
       })}

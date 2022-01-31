@@ -45,8 +45,8 @@ export default function PaginaInicial() {
       }}
       onClick={async(ev)=>{
         ev.preventDefault()
-        return await fetch(`https://api.github.com/users/cemf`)
-        .then(response => response.json())
+        return fetch(`https://api.github.com/users/cemf`)
+        .then(aysnc (response) => {await response.json()})
         .then(response => {
           console.log(response)
           ev.target.innerHTML = response.login;
@@ -89,7 +89,7 @@ export default function PaginaInicial() {
             as="form"
             onSubmit={(ev)=>{
               ev.preventDefault();
-              roteamento.push('/chat')
+              roteamento.push(`/chat?username=${username}`)
               
             }}
             styleSheet={{
