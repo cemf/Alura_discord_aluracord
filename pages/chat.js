@@ -272,7 +272,7 @@ function MessageList(props) {
               >
                 {new Date().toLocaleDateString()}
               </Text>
-              <Button
+              {/* <Button
                 styleSheet={{
                   float: 'right',
                 }}
@@ -288,7 +288,7 @@ function MessageList(props) {
                   //                           setListaMensagens([...listaDeMensagens])
                   //                       }
                 }}
-              />
+              /> */}
             </Box>
             {/* Declarativo */}
             {mensagem.texto.startsWith(':sticker:') ? (
