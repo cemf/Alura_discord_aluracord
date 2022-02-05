@@ -60,7 +60,7 @@ export default function PaginaInicial() {
           justifyContent: 'center',
           // backgroundColor: appConfig.theme.colors.primary[500],
           backgroundImage:
-            'url(https://external-preview.redd.it/_YA2AgljB4nmG8w03RbpUv4G4_ShUj4ah0Xxsy1Q75c.jpg?width=640&crop=smart&auto=webp&s=cc8644acb46a33a2519820be4749b18113e95758)',
+            'url(https://images2.alphacoders.com/884/884331.jpg)',
           backgroundRepeat: 'no-repeat',
           backgroundSize: 'cover',
           backgroundBlendMode: 'multiply',
